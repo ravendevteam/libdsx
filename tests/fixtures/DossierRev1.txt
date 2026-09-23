@@ -1,0 +1,360 @@
+
+
+
+                                    DOSSIER BINARY FORMAT 1.0
+                                         Elias A. Murphy
+
+                                        Rev. 1, 09.22.2026
+
+
+
+1. ABSTRACT
+===========
+
+Dossier is a binary format for ASCII documents presented in a 98-column text layout. It stores
+metadata and document content in independently compressed sections, allowing a reader to inspect
+the document's identity and revision information before decoding its content. Typed content
+records describe the document structure and preserve the layout of ASCII diagrams.
+
+This specification defines Dossier version 1.0, including its binary encoding, validation
+requirements, and canonical text presentation. Embedded attachments and revision history are
+outside its scope, as are encryption and digital signatures.
+
+
+2. CONVENTIONS AND TERMINOLOGY
+==============================
+
+The requirement terms MUST, MUST NOT, and MAY, when written in uppercase, carry the meanings
+defined by BCP 14 in RFC 2119[1] and RFC 8174[2].
+
+An octet is an eight-bit byte. Lengths are measured in bytes unless another unit is given, and
+file offsets start at zero. Numbers are decimal unless identified as hexadecimal. In a hexadecimal
+byte sequence, each pair of digits represents one byte; spaces separate the pairs for readability.
+
+The terms writer and reader refer to implementations that encode and decode Dossier files. A
+renderer produces the canonical text representation specified in Section 7. Conformance covers the
+document's structure and presentation as well as its binary encoding.
+
+Version information has two levels: the header identifies the container layout, and the
+dsx_version metadata field identifies the document schema. The revision field belongs to the
+document itself and records its revision number.
+
+
+3. FILE STRUCTURE
+=================
+
+A Dossier file, conventionally named with a .dsx extension, consists of three contiguous parts: a
+32-byte header, a compressed metadata section, and a compressed content section. The header gives
+the stored lengths M and C, which determine the section boundaries and total file size shown
+below.
+
+Offset 0                       Offset 32                  Offset 32 + M
++------------------------------+--------------------------+--------------------------+
+| Header: 32 bytes             | Metadata: M bytes        | Content: C bytes         |
++------------------------------+--------------------------+--------------------------+
+                                                         File size: 32 + M + C
+
+The file signature identifies the format. A reader MUST verify it before interpreting the header.
+The content section ends at the end of the file.
+
+3.1 HEADER
+
+The header occupies the first 32 bytes without padding. Its fixed-width integer fields are
+unsigned and little-endian; the signature is stored as the eight literal bytes listed in the
+table.
+
++--------+-------+------------------------------------------+
+| Offset | Bytes | Field                                    |
++--------+-------+------------------------------------------+
+| 0      | 8     | Signature: 89 44 53 58 0D 0A 1A 0A (hex) |
+| 8      | 1     | Container layout version: 1              |
+| 9      | 1     | Compression identifier: 1                |
+| 10     | 2     | Reserved: 0                              |
+| 12     | 4     | Compressed metadata length, M            |
+| 16     | 4     | Uncompressed metadata length             |
+| 20     | 4     | Compressed content length, C             |
+| 24     | 4     | Uncompressed content length              |
+| 28     | 4     | CRC-32 of bytes 0 through 27             |
++--------+-------+------------------------------------------+
+
+The final field contains the CRC-32/ISO-HDLC checksum of the preceding 28 bytes, stored as a
+little-endian 32-bit value. The ASCII sequence 123456789 has the check value CBF43926 in
+hexadecimal.
+
+For this version, both the container layout version and compression identifier are 1, and the
+reserved field is zero. Readers MUST reject headers with other values or an incorrect checksum.
+
+3.2 COMPRESSION
+
+Each section is encoded as an independent zlib stream under RFC 1950[3], using DEFLATE under RFC
+1951[4] with no preset dictionary. The zlib framing and Adler-32 checksum follow RFC 1950's
+byte-order rules. Readers MUST accept any valid compression level.
+
+A stored section contains one complete stream ending at the declared section boundary. Its decoded
+length MUST equal the uncompressed length in the header. The metadata has a nonempty decoded
+representation; the content may decode to zero bytes while retaining its complete zlib framing.
+
+3.3 SECTION LENGTHS
+
+Stored section lengths include the zlib framing and checksum. The limits below apply to the values
+declared in the header and to the actual section sizes.
+
++----------+----------------------+----------------------------+
+| Section  | Maximum stored bytes | Maximum uncompressed bytes |
++----------+----------------------+----------------------------+
+| Metadata | 131072               | 65536                      |
+| Content  | 68157440             | 67108864                   |
++----------+----------------------+----------------------------+
+
+M, C, and the uncompressed metadata length are positive. A reader MUST verify that the file
+contains exactly 32 + M + C bytes and validate the header before allocating buffers from its
+length fields. Decompression MUST remain within the declared uncompressed lengths and the section
+limits.
+
+
+4. PRIMITIVE ENCODING
+=====================
+
+4.1 UNSIGNED INTEGERS
+
+U denotes an integer from 0 through 4294967295 encoded in canonical unsigned LEB128. Each byte
+carries seven value bits, starting with the least significant group; bit 7 indicates that another
+byte follows. The canonical representation uses the shortest encoding and occupies at most five
+bytes.
+
+For example, the hexadecimal encodings of 127 and 128 are 7F and 80 01. The sequence 80 00 is
+invalid because zero has the one-byte encoding 00. Readers MUST reject noncanonical or truncated
+encodings and values outside the permitted range.
+
+4.2 STRINGS
+
+S denotes U(byte_length) followed by that many printable ASCII bytes, with no terminator.
+Printable ASCII spans hexadecimal 20 through 7E. S may be empty unless its field requires a
+nonempty value.
+
+ASCII(text) denotes the same character encoding with its length supplied by the enclosing field or
+record. ASCII blocks extend this repertoire with LF, hexadecimal 0A, to preserve line boundaries.
+Other control characters, including tabs, CR, and DEL, are excluded from stored text.
+
+4.3 FIELDS AND RECORDS
+
+Metadata and content use type-length-value encoding, abbreviated TLV. A one-byte type identifier
+is followed by U(length) and exactly length value bytes. Inline records use the same layout.
+
++-------------------+----------------------+--------------------------------+
+| Type: one byte    | Value byte length: U | Value: exactly that many bytes |
++-------------------+----------------------+--------------------------------+
+
+Type identifiers are interpreted in the context of their enclosing metadata section, content
+section, or inline sequence. Parsing continues through complete TLVs until that enclosing value is
+exhausted. Incomplete records and residual bytes are invalid.
+
+
+5. METADATA
+===========
+
+5.1 REQUIRED FIELDS
+
+The metadata section begins with the following five fields, each occurring exactly once in the
+order shown. The TLV value length supplies the length of ordinary text fields; S prefixes are used
+for names within the authors list.
+
++----+-------------+---------------------------------------+
+| ID | Name        | Value encoding                        |
++----+-------------+---------------------------------------+
+| 1  | dsx_version | ASCII(1.0)                            |
+| 2  | title       | ASCII(title)                          |
+| 3  | authors     | U(count), followed by count S strings |
+| 4  | revision    | ASCII(decimal revision number)        |
+| 5  | date        | ASCII(MM.DD.YYYY)                     |
++----+-------------+---------------------------------------+
+
+The dsx_version field contains the ASCII value 1.0. Its complete uncompressed TLV is 01 03 31 2E
+30 in hexadecimal. This value selects the schema defined by the following field and record
+requirements.
+
+The title consists of 1 through 98 printable ASCII characters with no leading or trailing spaces.
+It contains at least one uppercase letter and no lowercase letters.
+
+Authors are stored as an ordered list of one or more names. Each name has 1 through 98 printable
+ASCII characters, with no leading or trailing spaces and no capitalization restriction. The list
+order is preserved through encoding and presentation.
+
+The revision is stored as the ASCII digits of a positive decimal integer, without a sign or
+leading zeros, and is limited to 4294967295. The date uses ten ASCII characters in the form
+MM.DD.YYYY and identifies a valid Gregorian date in years 0001 through 9999.
+
+5.2 ADDITIONAL FIELDS
+
+Additional metadata follows the required fields in ascending ASCII key order. Each entry uses type
+128 with a value composed of S(key) and the remaining bytes as printable ASCII text. The text
+value may be empty.
+
+Keys are unique within the section, match [a-z][a-z0-9_.-]{0,63}, and differ from the names of the
+required fields. Values are flat text strings. A reader MAY retain an unfamiliar key without
+interpreting its value; applications rewriting a document MUST preserve these fields except where
+the requested edit changes or removes them.
+
+
+6. DOCUMENT CONTENT
+===================
+
+6.1 RECORD TYPES
+
+The content section is a sequence of records in document order. Its uncompressed length delimits
+the sequence, which has no separate count or terminator. The record types are listed below.
+
++----+-------------+-------------------------+
+| ID | Record      | Value encoding          |
++----+-------------+-------------------------+
+| 1  | Heading     | U(depth) + ASCII(title) |
+| 2  | Paragraph   | Sequence of inline TLVs |
+| 3  | Bullet item | Sequence of inline TLVs |
+| 4  | ASCII block | Printable ASCII and LF  |
+| 5  | Reference   | U(number) + ASCII(URL)  |
++----+-------------+-------------------------+
+
+Reference records form the final group and are ordered by strictly increasing number.
+
+6.2 HEADINGS
+
+Heading depth ranges from 1 through 8. The first heading has depth 1; a later heading may have the
+same or a smaller depth, or be one level deeper. Section numbering follows record order: each
+heading increments the counter at its depth and resets the counters below it.
+
+A heading title is nonempty printable ASCII with at least one uppercase letter, no lowercase
+letters, and no leading or trailing spaces. The complete heading, including its generated section
+number and separating space, fits within 98 columns.
+
+6.3 PARAGRAPHS AND BULLET ITEMS
+
+Paragraphs and bullet items consist of inline TLVs. Type 1 stores nonempty printable ASCII text;
+type 2 stores exactly one U citation number in the range 1 through 4294967295. Writers MUST merge
+adjacent text records, while readers interpret such records as consecutive text.
+
+Display text is formed by concatenating text records and rendering each citation as [n]. The
+complete paragraph or bullet item is nonempty, with single internal spaces and no leading or
+trailing spaces. These whitespace rules apply across record boundaries, allowing a space at either
+end of an individual text record. Wrapping and indentation are supplied by the renderer.
+
+Record types carry the citation semantics: a type-1 record containing [1] remains literal text,
+while a type-2 record with value 1 refers to reference 1. Both render as [1].
+
+The paragraph Hi illustrates the nested encoding. Its uncompressed bytes are 02 04 01 02 48 69 in
+hexadecimal: a type-2 content record whose four-byte value is a type-1 inline record containing
+the two ASCII characters.
+
+6.4 ASCII BLOCKS
+
+An ASCII block holds printable ASCII and LF with its layout preserved byte for byte, including
+blank lines and trailing spaces. The value may be empty. Each line is at most 98 characters long.
+
+6.5 REFERENCES
+
+Each reference pairs a unique number from 1 through 4294967295 with an absolute URL. The URL is
+printable ASCII without spaces and begins with a scheme matching [A-Za-z][A-Za-z0-9+.-]*:. Reading
+and rendering operate on this stored text without fetching the referenced resource.
+
+Every citation resolves to one reference. The reference group may also include uncited entries.
+Section 7.4 defines their presentation and the width limit for the reference URL.
+
+
+7. CANONICAL PRESENTATION
+=========================
+
+7.1 GENERAL RULES
+
+The canonical representation is monospaced text, limited to 98 characters per line, with LF line
+endings and a final LF. The renderer supplies layout whitespace around the stored content and
+wraps prose at spaces, taking as many whole words as fit on each line. Hyphenated words remain
+whole.
+
+The available width includes generated prefixes such as bullet indentation. An unbreakable token
+exceeding that width makes the document invalid. ASCII blocks retain their stored layout.
+
+7.2 TITLE BLOCK
+
+The document opens with three empty lines, followed by the title and one line per author in
+metadata order. After one empty line comes Rev. N, MM.DD.YYYY. Three more empty lines complete the
+block and separate it from any content that follows.
+
+Each nonempty line is centered by adding floor((98 - line_length) / 2) leading spaces, with no
+trailing padding. This places the extra column on the right when equal padding on both sides is
+impossible.
+
+7.3 SECTION HEADINGS
+
+Depth-1 headings use the form 1. TITLE and are followed immediately by an equals-sign separator
+matching the complete heading's character count. Deeper headings use dotted numbers, such as 1.1
+TITLE and 1.1.1 TITLE, without a separator.
+
+Between content records, the following record determines the gap: two empty lines before a depth-1
+heading, none between consecutive references, and one for all other transitions. The first content
+record follows the three empty lines of the title block.
+
+7.4 BODY LAYOUT
+
+A bullet begins with an asterisk and one space. Its continuation lines begin with two spaces,
+leaving 96 columns for text on each line. The inter-record spacing in Section 7.3 places one empty
+line between adjacent bullet items or paragraphs.
+
+Reference entries MUST use the plaintext form [n] URL, with one space between the citation number
+and bare URL. The URL is an unbreakable token subject to the 98-column limit; entries wrap between
+[n] and the URL when necessary. Inline citations remain [n].
+
+ASCII blocks retain their exact stored lines within the surrounding layout. Any blank lines at the
+beginning or end of a block are additional to the inter-record gap. Their text is neither reflowed
+nor trimmed.
+
+
+8. VALIDATION AND INTEROPERABILITY
+==================================
+
+8.1 COMPLETE DOCUMENT VALIDATION
+
+A reader MUST validate the header and declared lengths before decompressing the sections.
+Successful decompression requires complete streams with correct checksums and matching expanded
+lengths. The resulting metadata and content are then checked against the field definitions and
+document rules in Sections 4 through 7.
+
+Readers MUST reject unknown identifiers or unsupported versions. For Dossier 1.0, valid metadata
+types are 1 through 5 and 128, content types are 1 through 5, and inline types are 1 and 2. The
+dsx_version value is 1.0. Full validation includes metadata ordering, heading transitions,
+reference resolution and ordering, and the canonical layout limits.
+
+8.2 METADATA-ONLY INSPECTION
+
+A reader MAY stop after validating the header and total file size, then decompressing and
+validating the metadata section. This operation leaves the content section unread and unverified,
+which the reader MUST state when reporting its result.
+
+8.3 ENCODING STABILITY
+
+Writers MUST encode the same structured document into the same uncompressed sections. The
+prescribed field order and inline-text merging rules establish this representation. Compression
+libraries may encode those sections differently while producing conforming files.
+
+8.4 TEXT INTERCHANGE
+
+Text import builds a binary document from an authoring source; export produces the canonical
+display. Import is explicit, including for plaintext files previously given a .dsx extension.
+
+Exported text omits additional metadata and gives some distinct record types the same visible
+form. Applications MUST therefore treat text exports as lossy presentation copies.
+
+
+9. SECURITY CONSIDERATIONS
+==========================
+
+The length checks in Section 3 bound the memory needed for section data. Readers MUST enforce
+these bounds before allocating from declared lengths and throughout decompression. Checksum
+failures and incomplete streams fail validation.
+
+
+10. NORMATIVE REFERENCES
+========================
+
+[1] https://www.rfc-editor.org/rfc/rfc2119.html
+[2] https://www.rfc-editor.org/rfc/rfc8174.html
+[3] https://www.rfc-editor.org/rfc/rfc1950.html
+[4] https://www.rfc-editor.org/rfc/rfc1951.html

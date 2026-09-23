@@ -1,0 +1,911 @@
+{
+  "python": "3.12.4 (tags/v3.12.4:8e8a4ba, Jun  6 2024, 19:30:16) [MSC v.1940 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26100-SP0",
+  "repeat": 3,
+  "timing": "Median of untraced runs; each case/operation uses a fresh child process.",
+  "python_allocations": "Peak traced allocation in a separate operation run, excluding workload setup.",
+  "process_memory": "RSS/working set before and after untraced runs; process peak includes interpreter and setup; growth subtracts setup peak. Tracing is excluded.",
+  "baseline_comparison": "Ratios compare elapsed time and Python allocation peaks only; the original baseline did not isolate process memory.",
+  "streaming_operations": "iter_render_file and render_to_file read binary streams; rendered output is discarded. dump_to_sink discards compressed output. iter_records discards records.",
+  "results": {
+    "specification": {
+      "stored_bytes": 6644,
+      "operations": {
+        "load": {
+          "seconds": 0.002090699999826029,
+          "seconds_samples": [
+            0.003055299999687122,
+            0.002090699999826029,
+            0.001581399999849964
+          ],
+          "python_peak_bytes": 60879,
+          "process_rss_after_setup_bytes": 22646784,
+          "process_rss_after_timing_bytes": 22749184,
+          "process_peak_rss_after_setup_bytes": 22646784,
+          "process_peak_rss_bytes": 22749184,
+          "process_peak_rss_growth_bytes": 102400,
+          "baseline_ratios": {
+            "seconds": 0.36841177814845094,
+            "python_peak_bytes": 1.040506588729939
+          }
+        },
+        "validate_file": {
+          "seconds": 0.002583299999969313,
+          "seconds_samples": [
+            0.002030299999660201,
+            0.002583299999969313,
+            0.002782900000056543
+          ],
+          "python_peak_bytes": 35059,
+          "process_rss_after_setup_bytes": 22921216,
+          "process_rss_after_timing_bytes": 23003136,
+          "process_peak_rss_after_setup_bytes": 22921216,
+          "process_peak_rss_bytes": 23003136,
+          "process_peak_rss_growth_bytes": 81920,
+          "baseline_ratios": {
+            "seconds": 0.6048608021744846,
+            "python_peak_bytes": 0.5996168910020695
+          }
+        },
+        "dump": {
+          "seconds": 0.0017864999999801512,
+          "seconds_samples": [
+            0.0034615999998095504,
+            0.0017864999999801512,
+            0.0016586000001552748
+          ],
+          "python_peak_bytes": 322618,
+          "process_rss_after_setup_bytes": 22880256,
+          "process_rss_after_timing_bytes": 23117824,
+          "process_peak_rss_after_setup_bytes": 22880256,
+          "process_peak_rss_bytes": 23117824,
+          "process_peak_rss_growth_bytes": 237568,
+          "baseline_ratios": {
+            "seconds": 0.3788730303403115,
+            "python_peak_bytes": 1.0122111155035987
+          }
+        },
+        "render": {
+          "seconds": 0.0027531000000635686,
+          "seconds_samples": [
+            0.0028485000002547167,
+            0.0027531000000635686,
+            0.002538100000037957
+          ],
+          "python_peak_bytes": 44092,
+          "process_rss_after_setup_bytes": 22831104,
+          "process_rss_after_timing_bytes": 22855680,
+          "process_peak_rss_after_setup_bytes": 22831104,
+          "process_peak_rss_bytes": 22855680,
+          "process_peak_rss_growth_bytes": 24576,
+          "baseline_ratios": {
+            "seconds": 0.4065356388785551,
+            "python_peak_bytes": 0.9836694627877922
+          }
+        },
+        "iter_records": {
+          "seconds": 0.00226040000006833,
+          "seconds_samples": [
+            0.002415499999642634,
+            0.00226040000006833,
+            0.001628900000014255
+          ],
+          "python_peak_bytes": 36555,
+          "process_rss_after_setup_bytes": 22810624,
+          "process_rss_after_timing_bytes": 22884352,
+          "process_peak_rss_after_setup_bytes": 22810624,
+          "process_peak_rss_bytes": 22884352,
+          "process_peak_rss_growth_bytes": 73728
+        },
+        "iter_render_file": {
+          "seconds": 0.0036016999997627863,
+          "seconds_samples": [
+            0.0036016999997627863,
+            0.006668999999874359,
+            0.003383499999927153
+          ],
+          "python_peak_bytes": 37694,
+          "process_rss_after_setup_bytes": 22921216,
+          "process_rss_after_timing_bytes": 23019520,
+          "process_peak_rss_after_setup_bytes": 22921216,
+          "process_peak_rss_bytes": 23019520,
+          "process_peak_rss_growth_bytes": 98304
+        },
+        "render_to_file": {
+          "seconds": 0.008886900000106834,
+          "seconds_samples": [
+            0.008886900000106834,
+            0.009024500000123226,
+            0.005361199999697419
+          ],
+          "python_peak_bytes": 37342,
+          "process_rss_after_setup_bytes": 22835200,
+          "process_rss_after_timing_bytes": 22921216,
+          "process_peak_rss_after_setup_bytes": 22835200,
+          "process_peak_rss_bytes": 22921216,
+          "process_peak_rss_growth_bytes": 86016
+        },
+        "dump_to_sink": {
+          "seconds": 0.003168100000038976,
+          "seconds_samples": [
+            0.004264299999704235,
+            0.001992900000004738,
+            0.003168100000038976
+          ],
+          "python_peak_bytes": 322826,
+          "process_rss_after_setup_bytes": 22933504,
+          "process_rss_after_timing_bytes": 23212032,
+          "process_peak_rss_after_setup_bytes": 22933504,
+          "process_peak_rss_bytes": 23212032,
+          "process_peak_rss_growth_bytes": 278528
+        }
+      }
+    },
+    "tiny_records": {
+      "stored_bytes": 143,
+      "operations": {
+        "load": {
+          "seconds": 0.07266530000015337,
+          "seconds_samples": [
+            0.09516430000030596,
+            0.0709780000001956,
+            0.07266530000015337
+          ],
+          "python_peak_bytes": 1079150,
+          "process_rss_after_setup_bytes": 22704128,
+          "process_rss_after_timing_bytes": 24219648,
+          "process_peak_rss_after_setup_bytes": 22704128,
+          "process_peak_rss_bytes": 24219648,
+          "process_peak_rss_growth_bytes": 1515520,
+          "baseline_ratios": {
+            "seconds": 0.618102463469196,
+            "python_peak_bytes": 0.9175844778870771
+          }
+        },
+        "validate_file": {
+          "seconds": 0.04981929999985368,
+          "seconds_samples": [
+            0.050652699999773176,
+            0.0496819999998479,
+            0.04981929999985368
+          ],
+          "python_peak_bytes": 124272,
+          "process_rss_after_setup_bytes": 22585344,
+          "process_rss_after_timing_bytes": 22724608,
+          "process_peak_rss_after_setup_bytes": 22585344,
+          "process_peak_rss_bytes": 22724608,
+          "process_peak_rss_growth_bytes": 139264,
+          "baseline_ratios": {
+            "seconds": 0.4461280697464315,
+            "python_peak_bytes": 0.10567014473184091
+          }
+        },
+        "dump": {
+          "seconds": 0.04682099999990896,
+          "seconds_samples": [
+            0.04682099999990896,
+            0.044075400000110676,
+            0.047266900000067835
+          ],
+          "python_peak_bytes": 349071,
+          "process_rss_after_setup_bytes": 24104960,
+          "process_rss_after_timing_bytes": 24371200,
+          "process_peak_rss_after_setup_bytes": 24104960,
+          "process_peak_rss_bytes": 24371200,
+          "process_peak_rss_growth_bytes": 266240,
+          "baseline_ratios": {
+            "seconds": 0.735739652411809,
+            "python_peak_bytes": 1.0220710736590608
+          }
+        },
+        "render": {
+          "seconds": 0.08407450000004246,
+          "seconds_samples": [
+            0.08407450000004246,
+            0.07645090000005439,
+            0.10702320000018517
+          ],
+          "python_peak_bytes": 51192,
+          "process_rss_after_setup_bytes": 24133632,
+          "process_rss_after_timing_bytes": 24154112,
+          "process_peak_rss_after_setup_bytes": 24133632,
+          "process_peak_rss_bytes": 24154112,
+          "process_peak_rss_growth_bytes": 20480,
+          "baseline_ratios": {
+            "seconds": 1.5223138221305608,
+            "python_peak_bytes": 0.9913053581456595
+          }
+        },
+        "iter_records": {
+          "seconds": 0.10582660000000033,
+          "seconds_samples": [
+            0.10582660000000033,
+            0.11901189999980488,
+            0.10046959999999672
+          ],
+          "python_peak_bytes": 125768,
+          "process_rss_after_setup_bytes": 22560768,
+          "process_rss_after_timing_bytes": 22740992,
+          "process_peak_rss_after_setup_bytes": 22560768,
+          "process_peak_rss_bytes": 22740992,
+          "process_peak_rss_growth_bytes": 180224
+        },
+        "iter_render_file": {
+          "seconds": 0.06289839999999458,
+          "seconds_samples": [
+            0.061250200000358745,
+            0.06289839999999458,
+            0.06792339999992691
+          ],
+          "python_peak_bytes": 126907,
+          "process_rss_after_setup_bytes": 22618112,
+          "process_rss_after_timing_bytes": 22806528,
+          "process_peak_rss_after_setup_bytes": 22618112,
+          "process_peak_rss_bytes": 22806528,
+          "process_peak_rss_growth_bytes": 188416
+        },
+        "render_to_file": {
+          "seconds": 0.07956689999991795,
+          "seconds_samples": [
+            0.07956689999991795,
+            0.06972540000015215,
+            0.08160940000016126
+          ],
+          "python_peak_bytes": 126555,
+          "process_rss_after_setup_bytes": 22827008,
+          "process_rss_after_timing_bytes": 23019520,
+          "process_peak_rss_after_setup_bytes": 22827008,
+          "process_peak_rss_bytes": 23019520,
+          "process_peak_rss_growth_bytes": 192512
+        },
+        "dump_to_sink": {
+          "seconds": 0.0482718000002933,
+          "seconds_samples": [
+            0.05428620000020601,
+            0.046298299999762094,
+            0.0482718000002933
+          ],
+          "python_peak_bytes": 349279,
+          "process_rss_after_setup_bytes": 24027136,
+          "process_rss_after_timing_bytes": 24211456,
+          "process_peak_rss_after_setup_bytes": 24027136,
+          "process_peak_rss_bytes": 24211456,
+          "process_peak_rss_growth_bytes": 184320
+        }
+      }
+    },
+    "large_ascii": {
+      "stored_bytes": 3438,
+      "operations": {
+        "load": {
+          "seconds": 0.011742400000002817,
+          "seconds_samples": [
+            0.012047900000197842,
+            0.011085900000125548,
+            0.011742400000002817
+          ],
+          "python_peak_bytes": 2068118,
+          "process_rss_after_setup_bytes": 22790144,
+          "process_rss_after_timing_bytes": 22827008,
+          "process_peak_rss_after_setup_bytes": 22790144,
+          "process_peak_rss_bytes": 25088000,
+          "process_peak_rss_growth_bytes": 2297856,
+          "baseline_ratios": {
+            "seconds": 0.0687388702669122,
+            "python_peak_bytes": 0.7018977989225058
+          }
+        },
+        "validate_file": {
+          "seconds": 0.009987500000079308,
+          "seconds_samples": [
+            0.00973359999989043,
+            0.012107399999877089,
+            0.009987500000079308
+          ],
+          "python_peak_bytes": 313067,
+          "process_rss_after_setup_bytes": 22671360,
+          "process_rss_after_timing_bytes": 23085056,
+          "process_peak_rss_after_setup_bytes": 22671360,
+          "process_peak_rss_bytes": 23085056,
+          "process_peak_rss_growth_bytes": 413696,
+          "baseline_ratios": {
+            "seconds": 0.05891086130521656,
+            "python_peak_bytes": 0.10625284666142192
+          }
+        },
+        "dump": {
+          "seconds": 0.016298900000037975,
+          "seconds_samples": [
+            0.01887280000028113,
+            0.016298900000037975,
+            0.01560639999979685
+          ],
+          "python_peak_bytes": 495522,
+          "process_rss_after_setup_bytes": 23662592,
+          "process_rss_after_timing_bytes": 23601152,
+          "process_peak_rss_after_setup_bytes": 23662592,
+          "process_peak_rss_bytes": 24109056,
+          "process_peak_rss_growth_bytes": 446464,
+          "baseline_ratios": {
+            "seconds": 0.09485579200633222,
+            "python_peak_bytes": 0.16850288686528156
+          }
+        },
+        "render": {
+          "seconds": 0.009431599999970786,
+          "seconds_samples": [
+            0.009431599999970786,
+            0.00966840000000957,
+            0.008712699999705364
+          ],
+          "python_peak_bytes": 2513787,
+          "process_rss_after_setup_bytes": 23728128,
+          "process_rss_after_timing_bytes": 23990272,
+          "process_peak_rss_after_setup_bytes": 23728128,
+          "process_peak_rss_bytes": 26005504,
+          "process_peak_rss_growth_bytes": 2277376,
+          "baseline_ratios": {
+            "seconds": 0.057794039338328905,
+            "python_peak_bytes": 1.0253478993474987
+          }
+        },
+        "iter_records": {
+          "seconds": 0.009961199999906967,
+          "seconds_samples": [
+            0.009961199999906967,
+            0.01110400000015943,
+            0.009952200000043376
+          ],
+          "python_peak_bytes": 2069222,
+          "process_rss_after_setup_bytes": 22728704,
+          "process_rss_after_timing_bytes": 22786048,
+          "process_peak_rss_after_setup_bytes": 22728704,
+          "process_peak_rss_bytes": 24936448,
+          "process_peak_rss_growth_bytes": 2207744
+        },
+        "iter_render_file": {
+          "seconds": 0.008719599999949423,
+          "seconds_samples": [
+            0.008719599999949423,
+            0.008552199999940058,
+            0.010126799999852665
+          ],
+          "python_peak_bytes": 315630,
+          "process_rss_after_setup_bytes": 22847488,
+          "process_rss_after_timing_bytes": 23322624,
+          "process_peak_rss_after_setup_bytes": 22847488,
+          "process_peak_rss_bytes": 23322624,
+          "process_peak_rss_growth_bytes": 475136
+        },
+        "render_to_file": {
+          "seconds": 0.009049199999935809,
+          "seconds_samples": [
+            0.009049199999935809,
+            0.008649100000184262,
+            0.010750099999768281
+          ],
+          "python_peak_bytes": 315278,
+          "process_rss_after_setup_bytes": 22732800,
+          "process_rss_after_timing_bytes": 23207936,
+          "process_peak_rss_after_setup_bytes": 22732800,
+          "process_peak_rss_bytes": 23207936,
+          "process_peak_rss_growth_bytes": 475136
+        },
+        "dump_to_sink": {
+          "seconds": 0.015362399999958143,
+          "seconds_samples": [
+            0.017201800000293588,
+            0.015018800000234478,
+            0.015362399999958143
+          ],
+          "python_peak_bytes": 495730,
+          "process_rss_after_setup_bytes": 23941120,
+          "process_rss_after_timing_bytes": 23875584,
+          "process_peak_rss_after_setup_bytes": 23941120,
+          "process_peak_rss_bytes": 24440832,
+          "process_peak_rss_growth_bytes": 499712
+        }
+      }
+    },
+    "large_paragraph": {
+      "stored_bytes": 1214,
+      "operations": {
+        "load": {
+          "seconds": 0.007185800000115705,
+          "seconds_samples": [
+            0.007914499999969848,
+            0.007185800000115705,
+            0.006301599999915197
+          ],
+          "python_peak_bytes": 1574836,
+          "process_rss_after_setup_bytes": 22749184,
+          "process_rss_after_timing_bytes": 22794240,
+          "process_peak_rss_after_setup_bytes": 22749184,
+          "process_peak_rss_bytes": 24502272,
+          "process_peak_rss_growth_bytes": 1753088,
+          "baseline_ratios": {
+            "seconds": 0.05772798005185099,
+            "python_peak_bytes": 0.17914983809993576
+          }
+        },
+        "validate_file": {
+          "seconds": 0.00584000000026208,
+          "seconds_samples": [
+            0.00584000000026208,
+            0.005491800000072544,
+            0.006585900000118272
+          ],
+          "python_peak_bytes": 309051,
+          "process_rss_after_setup_bytes": 22728704,
+          "process_rss_after_timing_bytes": 23191552,
+          "process_peak_rss_after_setup_bytes": 22728704,
+          "process_peak_rss_bytes": 23191552,
+          "process_peak_rss_growth_bytes": 462848,
+          "baseline_ratios": {
+            "seconds": 0.04442520704700558,
+            "python_peak_bytes": 0.0351569538762279
+          }
+        },
+        "dump": {
+          "seconds": 0.019832099999803177,
+          "seconds_samples": [
+            0.04077589999997144,
+            0.019832099999803177,
+            0.013374799999837705
+          ],
+          "python_peak_bytes": 469514,
+          "process_rss_after_setup_bytes": 23703552,
+          "process_rss_after_timing_bytes": 23703552,
+          "process_peak_rss_after_setup_bytes": 23703552,
+          "process_peak_rss_bytes": 24223744,
+          "process_peak_rss_growth_bytes": 520192,
+          "baseline_ratios": {
+            "seconds": 0.13932652628086362,
+            "python_peak_bytes": 0.05841645246902621
+          }
+        },
+        "render": {
+          "seconds": 0.13606010000012247,
+          "seconds_samples": [
+            0.13008290000016132,
+            0.13626279999971302,
+            0.13606010000012247
+          ],
+          "python_peak_bytes": 1876375,
+          "process_rss_after_setup_bytes": 23715840,
+          "process_rss_after_timing_bytes": 23560192,
+          "process_peak_rss_after_setup_bytes": 23715840,
+          "process_peak_rss_bytes": 25952256,
+          "process_peak_rss_growth_bytes": 2236416,
+          "baseline_ratios": {
+            "seconds": 0.5115599069079727,
+            "python_peak_bytes": 0.14768544218817897
+          }
+        },
+        "iter_records": {
+          "seconds": 0.009252700000160985,
+          "seconds_samples": [
+            0.009628799999973126,
+            0.009252700000160985,
+            0.007430000000113068
+          ],
+          "python_peak_bytes": 1575940,
+          "process_rss_after_setup_bytes": 22675456,
+          "process_rss_after_timing_bytes": 22937600,
+          "process_peak_rss_after_setup_bytes": 22675456,
+          "process_peak_rss_bytes": 24354816,
+          "process_peak_rss_growth_bytes": 1679360
+        },
+        "iter_render_file": {
+          "seconds": 0.11941759999990609,
+          "seconds_samples": [
+            0.11941759999990609,
+            0.1145529999998871,
+            0.12167709999994258
+          ],
+          "python_peak_bytes": 312040,
+          "process_rss_after_setup_bytes": 22736896,
+          "process_rss_after_timing_bytes": 23236608,
+          "process_peak_rss_after_setup_bytes": 22736896,
+          "process_peak_rss_bytes": 23236608,
+          "process_peak_rss_growth_bytes": 499712
+        },
+        "render_to_file": {
+          "seconds": 0.13193719999981113,
+          "seconds_samples": [
+            0.13976229999980205,
+            0.13193719999981113,
+            0.11687819999997373
+          ],
+          "python_peak_bytes": 311688,
+          "process_rss_after_setup_bytes": 22790144,
+          "process_rss_after_timing_bytes": 23236608,
+          "process_peak_rss_after_setup_bytes": 22790144,
+          "process_peak_rss_bytes": 23236608,
+          "process_peak_rss_growth_bytes": 446464
+        },
+        "dump_to_sink": {
+          "seconds": 0.010046599999895989,
+          "seconds_samples": [
+            0.010046599999895989,
+            0.010538699999870005,
+            0.008963899999798741
+          ],
+          "python_peak_bytes": 469722,
+          "process_rss_after_setup_bytes": 23773184,
+          "process_rss_after_timing_bytes": 23449600,
+          "process_peak_rss_after_setup_bytes": 23773184,
+          "process_peak_rss_bytes": 24018944,
+          "process_peak_rss_growth_bytes": 245760
+        }
+      }
+    },
+    "citations": {
+      "stored_bytes": 4076,
+      "operations": {
+        "load": {
+          "seconds": 0.01771999999982654,
+          "seconds_samples": [
+            0.01771999999982654,
+            0.01714929999980086,
+            0.01787369999965449
+          ],
+          "python_peak_bytes": 374450,
+          "process_rss_after_setup_bytes": 22552576,
+          "process_rss_after_timing_bytes": 23003136,
+          "process_peak_rss_after_setup_bytes": 22552576,
+          "process_peak_rss_bytes": 23003136,
+          "process_peak_rss_growth_bytes": 450560,
+          "baseline_ratios": {
+            "seconds": 0.8173997278241,
+            "python_peak_bytes": 0.9845397418031709
+          }
+        },
+        "validate_file": {
+          "seconds": 0.015086999999766704,
+          "seconds_samples": [
+            0.019235499999922467,
+            0.015086999999766704,
+            0.014671200000066165
+          ],
+          "python_peak_bytes": 98158,
+          "process_rss_after_setup_bytes": 22798336,
+          "process_rss_after_timing_bytes": 22941696,
+          "process_peak_rss_after_setup_bytes": 22798336,
+          "process_peak_rss_bytes": 22941696,
+          "process_peak_rss_growth_bytes": 143360,
+          "baseline_ratios": {
+            "seconds": 0.6875321846234598,
+            "python_peak_bytes": 0.2580863986538006
+          }
+        },
+        "dump": {
+          "seconds": 0.014998499999819614,
+          "seconds_samples": [
+            0.016081000000212953,
+            0.014998499999819614,
+            0.01367660000005344
+          ],
+          "python_peak_bytes": 334078,
+          "process_rss_after_setup_bytes": 23191552,
+          "process_rss_after_timing_bytes": 23474176,
+          "process_peak_rss_after_setup_bytes": 23191552,
+          "process_peak_rss_bytes": 23474176,
+          "process_peak_rss_growth_bytes": 282624,
+          "baseline_ratios": {
+            "seconds": 0.9528059765838062,
+            "python_peak_bytes": 1.0115023964587515
+          }
+        },
+        "render": {
+          "seconds": 0.013473399999838875,
+          "seconds_samples": [
+            0.01322810000010577,
+            0.013473399999838875,
+            0.01546280000002298
+          ],
+          "python_peak_bytes": 83283,
+          "process_rss_after_setup_bytes": 22986752,
+          "process_rss_after_timing_bytes": 23023616,
+          "process_peak_rss_after_setup_bytes": 22986752,
+          "process_peak_rss_bytes": 23023616,
+          "process_peak_rss_growth_bytes": 36864,
+          "baseline_ratios": {
+            "seconds": 0.5603410272312174,
+            "python_peak_bytes": 0.9904266958424508
+          }
+        },
+        "iter_records": {
+          "seconds": 0.01935589999993681,
+          "seconds_samples": [
+            0.019693000000188476,
+            0.01935589999993681,
+            0.018368699999882665
+          ],
+          "python_peak_bytes": 99718,
+          "process_rss_after_setup_bytes": 22618112,
+          "process_rss_after_timing_bytes": 22802432,
+          "process_peak_rss_after_setup_bytes": 22618112,
+          "process_peak_rss_bytes": 22802432,
+          "process_peak_rss_growth_bytes": 184320
+        },
+        "iter_render_file": {
+          "seconds": 0.021933500000159256,
+          "seconds_samples": [
+            0.021933500000159256,
+            0.024283700000069075,
+            0.02164199999970151
+          ],
+          "python_peak_bytes": 100924,
+          "process_rss_after_setup_bytes": 22896640,
+          "process_rss_after_timing_bytes": 23068672,
+          "process_peak_rss_after_setup_bytes": 22896640,
+          "process_peak_rss_bytes": 23068672,
+          "process_peak_rss_growth_bytes": 172032
+        },
+        "render_to_file": {
+          "seconds": 0.0230876000000535,
+          "seconds_samples": [
+            0.021563199999945937,
+            0.0230876000000535,
+            0.02466629999980796
+          ],
+          "python_peak_bytes": 100572,
+          "process_rss_after_setup_bytes": 22708224,
+          "process_rss_after_timing_bytes": 22872064,
+          "process_peak_rss_after_setup_bytes": 22708224,
+          "process_peak_rss_bytes": 22872064,
+          "process_peak_rss_growth_bytes": 163840
+        },
+        "dump_to_sink": {
+          "seconds": 0.027592200000071898,
+          "seconds_samples": [
+            0.027592200000071898,
+            0.020795800000087183,
+            0.028896499999973457
+          ],
+          "python_peak_bytes": 334286,
+          "process_rss_after_setup_bytes": 23027712,
+          "process_rss_after_timing_bytes": 23306240,
+          "process_peak_rss_after_setup_bytes": 23027712,
+          "process_peak_rss_bytes": 23306240,
+          "process_peak_rss_growth_bytes": 278528
+        }
+      }
+    },
+    "empty_deflate_blocks": {
+      "stored_bytes": 500091,
+      "operations": {
+        "load": {
+          "seconds": 0.6216952999998284,
+          "seconds_samples": [
+            0.6216952999998284,
+            0.7560474000001705,
+            0.538630899999589
+          ],
+          "python_peak_bytes": 135863,
+          "process_rss_after_setup_bytes": 23244800,
+          "process_rss_after_timing_bytes": 23449600,
+          "process_peak_rss_after_setup_bytes": 23244800,
+          "process_peak_rss_bytes": 23449600,
+          "process_peak_rss_growth_bytes": 204800
+        },
+        "validate_file": {
+          "seconds": 0.4045690000002651,
+          "seconds_samples": [
+            0.4045690000002651,
+            0.5714898999999605,
+            0.39750350000031176
+          ],
+          "python_peak_bytes": 135471,
+          "process_rss_after_setup_bytes": 23273472,
+          "process_rss_after_timing_bytes": 23474176,
+          "process_peak_rss_after_setup_bytes": 23273472,
+          "process_peak_rss_bytes": 23474176,
+          "process_peak_rss_growth_bytes": 200704
+        },
+        "dump": {
+          "seconds": 0.00024050000001807348,
+          "seconds_samples": [
+            0.0016620000001239532,
+            0.0001712000002953573,
+            0.00024050000001807348
+          ],
+          "python_peak_bytes": 304538,
+          "process_rss_after_setup_bytes": 23330816,
+          "process_rss_after_timing_bytes": 23445504,
+          "process_peak_rss_after_setup_bytes": 23330816,
+          "process_peak_rss_bytes": 23445504,
+          "process_peak_rss_growth_bytes": 114688
+        },
+        "render": {
+          "seconds": 8.389999993596575e-05,
+          "seconds_samples": [
+            8.389999993596575e-05,
+            8.900000011635711e-05,
+            6.639999992330559e-05
+          ],
+          "python_peak_bytes": 2606,
+          "process_rss_after_setup_bytes": 23339008,
+          "process_rss_after_timing_bytes": 23339008,
+          "process_peak_rss_after_setup_bytes": 23339008,
+          "process_peak_rss_bytes": 23339008,
+          "process_peak_rss_growth_bytes": 0
+        },
+        "iter_records": {
+          "seconds": 0.42814620000035575,
+          "seconds_samples": [
+            0.7294302000000243,
+            0.42814620000035575,
+            0.38002830000004906
+          ],
+          "python_peak_bytes": 136967,
+          "process_rss_after_setup_bytes": 23289856,
+          "process_rss_after_timing_bytes": 23486464,
+          "process_peak_rss_after_setup_bytes": 23289856,
+          "process_peak_rss_bytes": 23486464,
+          "process_peak_rss_growth_bytes": 196608
+        },
+        "iter_render_file": {
+          "seconds": 0.5443511000003127,
+          "seconds_samples": [
+            0.5443511000003127,
+            0.38384580000001733,
+            0.5657857999999578
+          ],
+          "python_peak_bytes": 138106,
+          "process_rss_after_setup_bytes": 22925312,
+          "process_rss_after_timing_bytes": 23126016,
+          "process_peak_rss_after_setup_bytes": 22925312,
+          "process_peak_rss_bytes": 23126016,
+          "process_peak_rss_growth_bytes": 200704
+        },
+        "render_to_file": {
+          "seconds": 0.38979299999982686,
+          "seconds_samples": [
+            0.384373300000334,
+            0.38979299999982686,
+            0.3914067000000614
+          ],
+          "python_peak_bytes": 137754,
+          "process_rss_after_setup_bytes": 23318528,
+          "process_rss_after_timing_bytes": 23511040,
+          "process_peak_rss_after_setup_bytes": 23318528,
+          "process_peak_rss_bytes": 23511040,
+          "process_peak_rss_growth_bytes": 192512
+        },
+        "dump_to_sink": {
+          "seconds": 0.00024290000010296353,
+          "seconds_samples": [
+            0.001457000000300468,
+            0.00014689999989059288,
+            0.00024290000010296353
+          ],
+          "python_peak_bytes": 304746,
+          "process_rss_after_setup_bytes": 23355392,
+          "process_rss_after_timing_bytes": 23482368,
+          "process_peak_rss_after_setup_bytes": 23355392,
+          "process_peak_rss_bytes": 23482368,
+          "process_peak_rss_growth_bytes": 126976
+        }
+      }
+    },
+    "adjacent_text": {
+      "stored_bytes": 269,
+      "operations": {
+        "load": {
+          "seconds": 0.0011309000001347158,
+          "seconds_samples": [
+            0.0018720000002758752,
+            0.0011309000001347158,
+            0.0009683000002951303
+          ],
+          "python_peak_bytes": 280114,
+          "process_rss_after_setup_bytes": 22609920,
+          "process_rss_after_timing_bytes": 23056384,
+          "process_peak_rss_after_setup_bytes": 22609920,
+          "process_peak_rss_bytes": 23056384,
+          "process_peak_rss_growth_bytes": 446464
+        },
+        "validate_file": {
+          "seconds": 0.0013627000002998102,
+          "seconds_samples": [
+            0.0013627000002998102,
+            0.00094600000011269,
+            0.001606199999969249
+          ],
+          "python_peak_bytes": 245043,
+          "process_rss_after_setup_bytes": 22773760,
+          "process_rss_after_timing_bytes": 23031808,
+          "process_peak_rss_after_setup_bytes": 22773760,
+          "process_peak_rss_bytes": 23031808,
+          "process_peak_rss_growth_bytes": 258048
+        },
+        "dump": {
+          "seconds": 0.07090319999997519,
+          "seconds_samples": [
+            0.07367690000000948,
+            0.06598110000004453,
+            0.07090319999997519
+          ],
+          "python_peak_bytes": 375207,
+          "process_rss_after_setup_bytes": 24141824,
+          "process_rss_after_timing_bytes": 24162304,
+          "process_peak_rss_after_setup_bytes": 24141824,
+          "process_peak_rss_bytes": 24600576,
+          "process_peak_rss_growth_bytes": 458752
+        },
+        "render": {
+          "seconds": 0.07821770000009565,
+          "seconds_samples": [
+            0.07992890000014086,
+            0.07256839999990916,
+            0.07821770000009565
+          ],
+          "python_peak_bytes": 251365,
+          "process_rss_after_setup_bytes": 23777280,
+          "process_rss_after_timing_bytes": 23818240,
+          "process_peak_rss_after_setup_bytes": 23777280,
+          "process_peak_rss_bytes": 23818240,
+          "process_peak_rss_growth_bytes": 40960
+        },
+        "iter_records": {
+          "seconds": 0.0010058000002572953,
+          "seconds_samples": [
+            0.0030898999998498766,
+            0.0009288999999625958,
+            0.0010058000002572953
+          ],
+          "python_peak_bytes": 281218,
+          "process_rss_after_setup_bytes": 22814720,
+          "process_rss_after_timing_bytes": 23252992,
+          "process_peak_rss_after_setup_bytes": 22814720,
+          "process_peak_rss_bytes": 23252992,
+          "process_peak_rss_growth_bytes": 438272
+        },
+        "iter_render_file": {
+          "seconds": 0.020860699999957433,
+          "seconds_samples": [
+            0.018647600000349485,
+            0.024249000000054366,
+            0.020860699999957433
+          ],
+          "python_peak_bytes": 248032,
+          "process_rss_after_setup_bytes": 22769664,
+          "process_rss_after_timing_bytes": 23130112,
+          "process_peak_rss_after_setup_bytes": 22769664,
+          "process_peak_rss_bytes": 23130112,
+          "process_peak_rss_growth_bytes": 360448
+        },
+        "render_to_file": {
+          "seconds": 0.01806299999998373,
+          "seconds_samples": [
+            0.019125499999972817,
+            0.017767800000001444,
+            0.01806299999998373
+          ],
+          "python_peak_bytes": 247680,
+          "process_rss_after_setup_bytes": 22712320,
+          "process_rss_after_timing_bytes": 23064576,
+          "process_peak_rss_after_setup_bytes": 22712320,
+          "process_peak_rss_bytes": 23064576,
+          "process_peak_rss_growth_bytes": 352256
+        },
+        "dump_to_sink": {
+          "seconds": 0.06603270000005068,
+          "seconds_samples": [
+            0.07289179999997941,
+            0.06603270000005068,
+            0.06394389999968553
+          ],
+          "python_peak_bytes": 375415,
+          "process_rss_after_setup_bytes": 24035328,
+          "process_rss_after_timing_bytes": 23887872,
+          "process_peak_rss_after_setup_bytes": 24035328,
+          "process_peak_rss_bytes": 24268800,
+          "process_peak_rss_growth_bytes": 233472
+        }
+      }
+    }
+  }
+}

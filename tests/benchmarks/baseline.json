@@ -1,0 +1,110 @@
+{
+  "python": "3.12.4 (tags/v3.12.4:8e8a4ba, Jun  6 2024, 19:30:16) [MSC v.1940 64 bit (AMD64)]",
+  "results": {
+    "specification": {
+      "stored_bytes": 6644,
+      "operations": {
+        "load": {
+          "seconds": 0.0056749000000309024,
+          "python_peak_bytes": 58509
+        },
+        "validate_file": {
+          "seconds": 0.004270899999937683,
+          "python_peak_bytes": 58469
+        },
+        "dump": {
+          "seconds": 0.004715300000043499,
+          "python_peak_bytes": 318726
+        },
+        "render": {
+          "seconds": 0.006772100000034698,
+          "python_peak_bytes": 44824
+        }
+      }
+    },
+    "tiny_records": {
+      "stored_bytes": 143,
+      "operations": {
+        "load": {
+          "seconds": 0.11756190000005518,
+          "python_peak_bytes": 1176077
+        },
+        "validate_file": {
+          "seconds": 0.11167040000009365,
+          "python_peak_bytes": 1176037
+        },
+        "dump": {
+          "seconds": 0.06363799999962794,
+          "python_peak_bytes": 341533
+        },
+        "render": {
+          "seconds": 0.055228100000022096,
+          "python_peak_bytes": 51641
+        }
+      }
+    },
+    "large_ascii": {
+      "stored_bytes": 3438,
+      "operations": {
+        "load": {
+          "seconds": 0.17082620000019233,
+          "python_peak_bytes": 2946466
+        },
+        "validate_file": {
+          "seconds": 0.1695358000001761,
+          "python_peak_bytes": 2946434
+        },
+        "dump": {
+          "seconds": 0.17182820000016363,
+          "python_peak_bytes": 2940733
+        },
+        "render": {
+          "seconds": 0.16319330000033005,
+          "python_peak_bytes": 2451643
+        }
+      }
+    },
+    "large_paragraph": {
+      "stored_bytes": 1214,
+      "operations": {
+        "load": {
+          "seconds": 0.12447689999999056,
+          "python_peak_bytes": 8790608
+        },
+        "validate_file": {
+          "seconds": 0.1314569000001029,
+          "python_peak_bytes": 8790608
+        },
+        "dump": {
+          "seconds": 0.14234260000012,
+          "python_peak_bytes": 8037359
+        },
+        "render": {
+          "seconds": 0.26597099999980856,
+          "python_peak_bytes": 12705213
+        }
+      }
+    },
+    "citations": {
+      "stored_bytes": 4076,
+      "operations": {
+        "load": {
+          "seconds": 0.021678500000234635,
+          "python_peak_bytes": 380330
+        },
+        "validate_file": {
+          "seconds": 0.02194370000006529,
+          "python_peak_bytes": 380330
+        },
+        "dump": {
+          "seconds": 0.01574140000002444,
+          "python_peak_bytes": 330279
+        },
+        "render": {
+          "seconds": 0.02404500000011467,
+          "python_peak_bytes": 84088
+        }
+      }
+    }
+  }
+}
