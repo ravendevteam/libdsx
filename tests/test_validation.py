@@ -15,9 +15,15 @@ def metadata() -> Metadata:
     return Metadata("VALID TITLE", ("Alice Author", "Bob Author"), 1, date(2026, 9, 22))
 
 
+def test_default_metadata_version_is_supported(metadata: Metadata) -> None:
+    assert metadata.dsx_version == "1.1"
+    validate_metadata(metadata)
+
+
 @pytest.mark.parametrize(
     ("field", "value"),
     [
+        ("dsx_version", "1.0"),
         ("dsx_version", "2.0"),
         ("dsx_version", 1),
         ("title", ""),

@@ -63,8 +63,8 @@ def _heading_text(heading: Heading, counters: list[int]) -> str:
 def validate_metadata(metadata: Metadata) -> None:
     if not isinstance(metadata, Metadata):
         _fail("metadata", "must be a Metadata instance")
-    if not isinstance(metadata.dsx_version, str) or metadata.dsx_version != "1.0":
-        _fail("metadata.dsx_version", "must be '1.0'")
+    if not isinstance(metadata.dsx_version, str) or metadata.dsx_version != "1.1":
+        _fail("metadata.dsx_version", "must be '1.1'")
     title = _title(metadata.title, "metadata.title")
     if len(title) > 98:
         _fail("metadata.title", "must fit within 98 columns")

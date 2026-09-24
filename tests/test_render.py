@@ -8,7 +8,7 @@ import pytest
 import libdsx
 
 
-FIXTURES = Path(__file__).resolve().parent / "fixtures"
+DATA = Path(__file__).resolve().parent / "data"
 TITLE_BLOCK = "\n\n\n" + " " * 46 + "TITLE\n" + " " * 47 + "Ada\n\n" + " " * 40 + "Rev. 1, 01.02.2026\n\n\n\n"
 
 
@@ -21,10 +21,10 @@ def paragraph(value: str) -> libdsx.Paragraph:
 
 
 def test_specification_matches_supplied_plaintext(trace) -> None:
-    source = libdsx.load(FIXTURES / "DossierRev1.dsx")
-    expected = (FIXTURES / "DossierRev1.txt").read_text(encoding="ascii")
+    source = libdsx.load(DATA / "DossierRev2.dsx")
+    expected = (DATA / "DossierRev2.txt").read_text(encoding="ascii")
     actual = libdsx.render(source)
-    trace("Render the supplied DSX specification to canonical text")
+    trace("Render specification revision 2 to canonical text")
     assert actual == expected
     assert "\r" not in actual
     assert actual.endswith("\n")

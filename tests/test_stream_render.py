@@ -15,7 +15,7 @@ from libdsx.limits import Limits
 
 
 rendering = importlib.import_module("libdsx.render")
-FIXTURES = Path(__file__).resolve().parent / "fixtures"
+DATA = Path(__file__).resolve().parent / "data"
 TITLE_BLOCK = "\n\n\n" + " " * 46 + "TITLE\n" + " " * 47 + "Ada\n\n" + " " * 40 + "Rev. 1, 01.02.2026\n\n\n\n"
 
 
@@ -24,15 +24,15 @@ def document(*records: libdsx.Record) -> libdsx.Document:
 
 
 @pytest.mark.parametrize("source_kind", ("document", "path", "stream"))
-def test_iter_render_matches_specification_fixture(source_kind: str) -> None:
-    path = FIXTURES / "DossierRev1.dsx"
+def test_iter_render_matches_specification(source_kind: str) -> None:
+    path = DATA / "DossierRev2.dsx"
     if source_kind == "document":
         source = libdsx.load(path)
     elif source_kind == "stream":
         source = io.BytesIO(path.read_bytes())
     else:
         source = path
-    assert "".join(rendering.iter_render(source)) == (FIXTURES / "DossierRev1.txt").read_text(encoding="ascii")
+    assert "".join(rendering.iter_render(source)) == (DATA / "DossierRev2.txt").read_text(encoding="ascii")
     if source_kind == "stream":
         assert not source.closed
 
@@ -157,7 +157,7 @@ def test_failed_output_closes_owned_document_reader(monkeypatch) -> None:
 
     monkeypatch.setattr(streaming, "open_document", observed_reader)
     with pytest.raises(OSError, match="output failed"):
-        rendering.render_to(FIXTURES / "DossierRev1.dsx", FailedSink())
+        rendering.render_to(DATA / "DossierRev2.dsx", FailedSink())
     assert readers[0].closed
     assert not readers[0].content_verified
 
@@ -211,4 +211,4 @@ def test_invalid_in_memory_document_produces_no_stream_output() -> None:
 
 def test_render_remains_document_only() -> None:
     with pytest.raises(libdsx.ValidationError, match="Document instance"):
-        rendering.render(FIXTURES / "DossierRev1.dsx")
+        rendering.render(DATA / "DossierRev2.dsx")

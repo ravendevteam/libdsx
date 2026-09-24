@@ -1,10 +1,10 @@
 
 
 
-                                    DOSSIER BINARY FORMAT 1.0
+                                      DOSSIER BINARY FORMAT
                                          Elias A. Murphy
 
-                                        Rev. 1, 09.22.2026
+                                        Rev. 2, 09.23.2026
 
 
 
@@ -16,7 +16,7 @@ metadata and document content in independently compressed sections, allowing a r
 the document's identity and revision information before decoding its content. Typed content
 records describe the document structure and preserve the layout of ASCII diagrams.
 
-This specification defines Dossier version 1.0, including its binary encoding, validation
+This specification defines Dossier version 1.1, including its binary encoding, validation
 requirements, and canonical text presentation. Embedded attachments and revision history are
 outside its scope, as are encryption and digital signatures.
 
@@ -162,15 +162,15 @@ for names within the authors list.
 +----+-------------+---------------------------------------+
 | ID | Name        | Value encoding                        |
 +----+-------------+---------------------------------------+
-| 1  | dsx_version | ASCII(1.0)                            |
+| 1  | dsx_version | ASCII(1.1)                            |
 | 2  | title       | ASCII(title)                          |
 | 3  | authors     | U(count), followed by count S strings |
 | 4  | revision    | ASCII(decimal revision number)        |
 | 5  | date        | ASCII(MM.DD.YYYY)                     |
 +----+-------------+---------------------------------------+
 
-The dsx_version field contains the ASCII value 1.0. Its complete uncompressed TLV is 01 03 31 2E
-30 in hexadecimal. This value selects the schema defined by the following field and record
+The dsx_version field contains the ASCII value 1.1. Its complete uncompressed TLV is 01 03 31 2E
+31 in hexadecimal. This value selects the schema defined by the following field and record
 requirements.
 
 The title consists of 1 through 98 printable ASCII characters with no leading or trailing spaces.
@@ -306,6 +306,11 @@ ASCII blocks retain their exact stored lines within the surrounding layout. Any 
 beginning or end of a block are additional to the inter-record gap. Their text is neither reflowed
 nor trimmed.
 
+LF terminates a line; a final LF does not create an extra empty line. An empty value contains zero
+lines. To terminate a nonempty block's final line, the renderer MUST append LF if and only if the
+stored value lacks a final LF. Empty blocks remain content records for the inter-record spacing in
+Section 7.3.
+
 
 8. VALIDATION AND INTEROPERABILITY
 ==================================
@@ -317,9 +322,9 @@ Successful decompression requires complete streams with correct checksums and ma
 lengths. The resulting metadata and content are then checked against the field definitions and
 document rules in Sections 4 through 7.
 
-Readers MUST reject unknown identifiers or unsupported versions. For Dossier 1.0, valid metadata
+Readers MUST reject unknown identifiers or unsupported versions. For Dossier 1.1, valid metadata
 types are 1 through 5 and 128, content types are 1 through 5, and inline types are 1 and 2. The
-dsx_version value is 1.0. Full validation includes metadata ordering, heading transitions,
+dsx_version value is 1.1. Full validation includes metadata ordering, heading transitions,
 reference resolution and ordering, and the canonical layout limits.
 
 8.2 METADATA-ONLY INSPECTION

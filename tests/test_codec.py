@@ -29,7 +29,7 @@ def tlv(kind: int, value: bytes) -> bytes:
 def metadata() -> bytes:
     return b"".join(
         (
-            tlv(1, b"1.0"),
+            tlv(1, b"1.1"),
             tlv(2, b"TEST DOCUMENT"),
             tlv(3, b"\x01\x03Ada"),
             tlv(4, b"1"),
@@ -84,6 +84,15 @@ def basic_document(records: tuple = ()) -> libdsx.Document:
 
 def test_reads_independently_encoded_empty_document() -> None:
     assert libdsx.loads(container()) == basic_document()
+
+
+def test_dsx_1_1_roundtrip_preserves_container_layout() -> None:
+    document = basic_document((libdsx.AsciiBlock("A\n\n"),))
+    encoded = libdsx.dumps(document)
+    assert sections(encoded)[0].startswith(tlv(1, b"1.1"))
+    assert libdsx.read_metadata_bytes(encoded).header.layout_version == 1
+    assert libdsx.loads(encoded) == document
+    assert libdsx.loads(encoded).metadata.dsx_version == "1.1"
 
 
 def test_writer_header_and_crc() -> None:
@@ -356,7 +365,7 @@ def test_metadata_only_rejects_invalid_metadata() -> None:
 
 @pytest.mark.parametrize(
     "field",
-    (tlv(1, b"1.0"), tlv(2, b"TEST DOCUMENT"), tlv(3, b"\x01\x03Ada"), tlv(4, b"1"), tlv(5, b"09.22.2026")),
+    (tlv(1, b"1.1"), tlv(2, b"TEST DOCUMENT"), tlv(3, b"\x01\x03Ada"), tlv(4, b"1"), tlv(5, b"09.22.2026")),
 )
 @pytest.mark.parametrize("fault", ("missing", "duplicate", "wrong_order"))
 def test_rejects_missing_repeated_and_out_of_order_required_metadata(field: bytes, fault: str) -> None:
@@ -370,10 +379,10 @@ def test_rejects_missing_repeated_and_out_of_order_required_metadata(field: byte
         libdsx.loads(container(raw))
 
 
-@pytest.mark.parametrize("value", (b"", b"1", b"1.00", b"1.1", b"2.0"))
+@pytest.mark.parametrize("value", (b"", b"1", b"1.00", b"1.0", b"1.10", b"2.0"))
 def test_rejects_unsupported_document_schema(value: bytes) -> None:
-    raw = metadata().replace(tlv(1, b"1.0"), tlv(1, value))
-    with pytest.raises(libdsx.DSXError):
+    raw = metadata().replace(tlv(1, b"1.1"), tlv(1, value))
+    with pytest.raises(libdsx.ValidationError, match="metadata.dsx_version"):
         libdsx.loads(container(raw))
 
 

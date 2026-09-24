@@ -14,7 +14,7 @@ from libdsx import codec, streaming
 from test_codec import container, tlv, u
 
 
-SAMPLE = Path(__file__).parent / "fixtures" / "DossierRev1.dsx"
+SAMPLE = Path(__file__).parent / "data" / "DossierRev2.dsx"
 
 
 def document(*records) -> dsx.Document:

@@ -11,7 +11,8 @@ import pytest
 import libdsx
 
 
-DOSSIER = Path(__file__).resolve().parent / "fixtures" / "DossierRev1.dsx"
+DATA = Path(__file__).resolve().parent / "data"
+SPECIFICATION = DATA / "DossierRev2.dsx"
 
 
 def sections(data: bytes) -> tuple[bytes, bytes]:
@@ -34,30 +35,45 @@ def sample_document() -> libdsx.Document:
     )
 
 
-def test_checked_in_specification_roundtrip(trace) -> None:
-    trace(f"Read reference document {DOSSIER.name}")
-    original_bytes = DOSSIER.read_bytes()
-    document = libdsx.load(DOSSIER)
-    assert document.metadata.title == "DOSSIER BINARY FORMAT 1.0"
+def test_specification_roundtrip(trace) -> None:
+    trace(f"Read specification revision 2: {SPECIFICATION.name}")
+    original_bytes = SPECIFICATION.read_bytes()
+    document = libdsx.load(SPECIFICATION)
+    assert document.metadata.title == "DOSSIER BINARY FORMAT"
     assert document.metadata.authors == ("Elias A. Murphy",)
-    assert document.metadata.revision == 1
-    assert document.metadata.date == date(2026, 9, 22)
-    assert document.metadata.additional == {"subject": "Dossier 1.0 binary format specification"}
-    assert document.metadata.dsx_version == "1.0"
-    assert len(document.records) == 96
-    trace("Validated 96 content records and preserved subject metadata")
+    assert document.metadata.revision == 2
+    assert document.metadata.date == date(2026, 9, 23)
+    assert document.metadata.additional == {"subject": "Dossier 1.1 binary format specification"}
+    assert document.metadata.dsx_version == "1.1"
+    assert len(document.records) == 97
+    trace("Validated 97 content records and preserved subject metadata")
     rewritten_bytes = libdsx.dumps(document)
     assert sections(rewritten_bytes) == sections(original_bytes)
     assert libdsx.loads(rewritten_bytes) == document
     libdsx.validate(document)
-    libdsx.validate_file(DOSSIER)
+    libdsx.validate_file(SPECIFICATION)
     trace("Re-encoded document has identical uncompressed metadata and content")
 
 
+@pytest.mark.parametrize("reader", (libdsx.load, libdsx.read_metadata, libdsx.validate_file, libdsx.open_document))
+def test_dsx_10_metadata_is_rejected(reader) -> None:
+    encoded = SPECIFICATION.read_bytes()
+    stored_length = struct.unpack_from("<I", encoded, 12)[0]
+    metadata = zlib.decompress(encoded[32:32 + stored_length])
+    assert metadata.startswith(b"\x01\x031.1")
+    stored_metadata = zlib.compress(b"\x01\x031.0" + metadata[5:])
+    header = bytearray(encoded[:32])
+    struct.pack_into("<I", header, 12, len(stored_metadata))
+    struct.pack_into("<I", header, 28, zlib.crc32(header[:28]))
+    legacy = bytes(header) + stored_metadata + encoded[32 + stored_length:]
+    with pytest.raises(libdsx.ValidationError, match="metadata.dsx_version"):
+        reader(io.BytesIO(legacy))
+
+
 def test_sample_metadata_inspection(trace) -> None:
-    inspection = libdsx.read_metadata(DOSSIER)
+    inspection = libdsx.read_metadata(SPECIFICATION)
     trace(f"Inspected metadata for {inspection.metadata.title}")
-    assert inspection.metadata == libdsx.load(DOSSIER).metadata
+    assert inspection.metadata == libdsx.load(SPECIFICATION).metadata
     assert inspection.content_verified is False
     trace("Content is explicitly reported as unverified")
 
@@ -108,7 +124,7 @@ def test_writer_merges_adjacent_text_without_crossing_citations() -> None:
 
 
 def test_rewriting_preserves_unfamiliar_metadata_when_changing_content(tmp_path) -> None:
-    document = libdsx.load(DOSSIER)
+    document = libdsx.load(SPECIFICATION)
     edited = libdsx.Document(document.metadata, (libdsx.Paragraph((libdsx.Text("Replacement body."),)),))
     destination = tmp_path / "edited.dsx"
     libdsx.dump(edited, destination)

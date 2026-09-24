@@ -57,7 +57,7 @@ def document(case: str) -> libdsx.Document:
 
 def encoded_case(case: str) -> bytes:
     if case == "specification":
-        return libdsx.dumps(libdsx.load(ROOT / "tests" / "fixtures" / "DossierRev1.dsx"))
+        return libdsx.dumps(libdsx.load(ROOT / "tests" / "data" / "DossierRev2.dsx"))
     encoded = libdsx.dumps(document(case))
     if case != "empty_deflate_blocks":
         return encoded

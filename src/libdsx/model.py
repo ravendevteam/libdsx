@@ -55,7 +55,7 @@ class Metadata:
     revision: int
     date: date
     additional: dict[str, str] = field(default_factory=dict)
-    dsx_version: str = "1.0"
+    dsx_version: str = "1.1"
 
 
 @dataclass(frozen=True, slots=True)
